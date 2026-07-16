@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuro — Late Night Izakaya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#19161389;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --ink:#1B1815;
+    --paper:#F2EAE1;
+    --paper-dim:#E6DCCC;
+    --seal:#C1121F;
+    --gold:#B08D57;
+    --grey:#8A8378;
+  }
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    padding:6vh 6vw;
+    overflow:hidden;
+    text-align:center;
+    background:
+      radial-gradient(ellipse at 50% 0%, #2A241F 0%, var(--ink) 60%);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(242,234,225,0.035) 0 1px, transparent 1px 64px);
+    pointer-events:none;
+  }
+  .seal{
+    width:76px;height:76px;
+    border:2px solid var(--seal);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--seal);
+    font-family:'Shippori Mincho', serif;
+    font-size:1.6rem;
+    font-weight:700;
+    margin-bottom:1.6rem;
+    transform:rotate(-8deg);
+    opacity:0;
+    animation:stampIn 0.6s cubic-bezier(.2,.9,.3,1.2) 0.3s forwards;
+  }
+  @keyframes stampIn{
+    0%{opacity:0; transform:scale(1.8) rotate(-8deg);}
+    60%{opacity:1;}
+    100%{opacity:1; transform:scale(1) rotate(-8deg);}
+  }
+  .hero h1{
+    font-family:'Shippori Mincho', serif;
+    font-weight:700;
+    font-size:clamp(3.5rem, 12vw, 8rem);
+    letter-spacing:0.04em;
+    line-height:0.95;
+    color:var(--paper);
+  }
+  .hero .sub{
+    margin-top:1.1rem;
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    font-size:0.72rem;
+    color:var(--gold);
+  }
+  .hero .tagline{
+    margin-top:2rem;
+    max-width:34ch;
+    font-size:1rem;
+    line-height:1.7;
+    color:var(--grey);
+  }
+  .hero .hours{
+    margin-top:3rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem;
+    color:var(--grey);
+    letter-spacing:0.05em;
+  }
+  .scroll-cue{
+    position:absolute;
+    bottom:2.5rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.65rem;
+    letter-spacing:0.3em;
+    color:var(--grey);
+    text-transform:uppercase;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.6rem;
+  }
+  .scroll-cue span{
+    width:1px;height:34px;
+    background:linear-gradient(var(--gold), transparent);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:0.3;}
+    50%{opacity:1;}
+  }
+
+  /* ---------- NAV / FILTER ---------- */
+  .filter-bar{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:rgba(27,24,21,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(176,141,87,0.25);
+    display:flex;
+    gap:0;
+    overflow-x:auto;
+    padding:0 6vw;
+  }
+  .filter-bar button{
+    background:none;
+    border:none;
+    color:var(--grey);
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    padding:1.3rem 1.4rem;
+    cursor:pointer;
+    white-space:nowrap;
+    position:relative;
+    transition:color 0.25s ease;
+  }
+  .filter-bar button::after{
+    content:"";
+    position:absolute;
+    left:1.4rem;right:1.4rem;bottom:0;
+    height:2px;
+    background:var(--seal);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform 0.3s ease;
+  }
+  .filter-bar button:hover{color:var(--paper);}
+  .filter-bar button.active{color:var(--paper);}
+  .filter-bar button.active::after{transform:scaleX(1);}
+
+  /* ---------- MENU ---------- */
+  .menu{
+    max-width:900px;
+    margin:0 auto;
+    padding:5rem 6vw 8rem;
+  }
+  .category{
+    margin-bottom:4.5rem;
+  }
+  .category-head{
+    display:flex;
+    align-items:baseline;
+    gap:1rem;
+    margin-bottom:2rem;
+  }
+  .category-head .jp{
+    font-family:'Shippori Mincho', serif;
+    color:var(--seal);
+    font-size:1.4rem;
+  }
+  .category-head h2{
+    font-family:'Shippori Mincho', serif;
+    font-weight:500;
+    font-size:1.8rem;
+    letter-spacing:0.03em;
+  }
+  .category-head .rule{
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, rgba(176,141,87,0.5), transparent);
+  }
+
+  .item{
+    display:grid;
+    grid-template-columns:1fr auto;
+    column-gap:1.5rem;
+    padding:1.15rem 0;
+    border-bottom:1px solid rgba(242,234,225,0.08);
+    transition:opacity 0.3s ease, transform 0.3s ease;
+  }
+  .item.hidden{display:none;}
+  .item-name{
+    font-size:1.05rem;
+    font-weight:500;
+    display:flex;
+    align-items:center;
+    gap:0.55rem;
+  }
+  .item-name .mark{
+    width:7px;height:7px;
+    border-radius:50%;
+    background:var(--seal);
+    flex:none;
+    display:none;
+  }
+  .item.rec .mark{display:inline-block;}
+  .item-desc{
+    grid-column:1 / 2;
+    margin-top:0.35rem;
+    font-size:0.85rem;
+    color:var(--grey);
+    line-height:1.55;
+    max-width:52ch;
+  }
+  .item-price{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.95rem;
+    color:var(--gold);
+    align-self:start;
+  }
+
+  footer{
+    text-align:center;
+    padding:3.5rem 6vw 4rem;
+    border-top:1px solid rgba(176,141,87,0.2);
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.7rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--grey);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .seal, .scroll-cue span{animation:none;}
+    html{scroll-behavior:auto;}
+  }
+
+  @media (max-width:600px){
+    .item{grid-template-columns:1fr;}
+    .item-price{margin-top:0.4rem;}
+  }
+
+  button:focus-visible, a:focus-visible{
+    outline:2px solid var(--seal);
+    outline-offset:3px;
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="seal">黒</div>
+  <h1>KURO</h1>
+  <div class="sub">Late Night Izakaya</div>
+  <p class="tagline">Charcoal, smoke, and small plates built for sharing — open until the last train.</p>
+  <div class="hours">MON–SAT · 5PM – 1AM &nbsp;/&nbsp; NO RESERVATIONS AFTER 11</div>
+  <div class="scroll-cue"><span></span>MENU</div>
+</section>
+
+<nav class="filter-bar" id="filterBar">
+  <button class="active" data-filter="all">All</button>
+  <button data-filter="small">Small Plates</button>
+  <button data-filter="robata">Robata</button>
+  <button data-filter="noodles">Noodles</button>
+  <button data-filter="drinks">Drinks</button>
+</nav>
+
+<main class="menu" id="menu">
+
+  <div class="category" data-cat="small">
+    <div class="category-head"><span class="jp">小皿</span><h2>Small Plates</h2><span class="rule"></span></div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Edamame</div>
+        <div class="item-desc">Steamed soybeans, sea salt, togarashi.</div>
+      </div>
+      <div class="item-price">6</div>
+    </div>
+
+    <div class="item rec">
+      <div>
+        <div class="item-name"><span class="mark"></span>Gyoza</div>
+        <div class="item-desc">Pan-seared pork dumplings, black vinegar, chili oil.</div>
+      </div>
+      <div class="item-price">11</div>
+    </div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Karaage</div>
+        <div class="item-desc">Double-fried chicken thigh, yuzu kosho mayo.</div>
+      </div>
+      <div class="item-price">12</div>
+    </div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Takoyaki</div>
+        <div class="item-desc">Octopus dumplings, bonito flake, okonomi glaze.</div>
+      </div>
+      <div class="item-price">10</div>
+    </div>
+  </div>
+
+  <div class="category" data-cat="robata">
+    <div class="category-head"><span class="jp">炉端</span><h2>Robata Grill</h2><span class="rule"></span></div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Yakitori — Chicken Thigh</div>
+        <div class="item-desc">Charcoal-grilled skewers, tare glaze, scallion. Two per order.</div>
+      </div>
+      <div class="item-price">9</div>
+    </div>
+
+    <div class="item rec">
+      <div>
+        <div class="item-name"><span class="mark"></span>Miso Black Cod</div>
+        <div class="item-desc">72-hour saikyo miso marinade, charred to lacquer.</div>
+      </div>
+      <div class="item-price">24</div>
+    </div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Wagyu Skewers</div>
+        <div class="item-desc">A5 striploin, shishito pepper, ponzu.</div>
+      </div>
+      <div class="item-price">28</div>
+    </div>
+  </div>
+
+  <div class="category" data-cat="noodles">
+    <div class="category-head"><span class="jp">麺</span><h2>Noodles</h2><span class="rule"></span></div>
+
+    <div class="item rec">
+      <div>
+        <div class="item-name"><span class="mark"></span>Tonkotsu Ramen</div>
+        <div class="item-desc">18-hour pork broth, chashu, ajitama, black garlic oil.</div>
+      </div>
+      <div class="item-price">17</div>
+    </div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Yuzu Shio Ramen</div>
+        <div class="item-desc">Clear chicken broth, yuzu, grilled scallion, nori.</div>
+      </div>
+      <div class="item-price">16</div>
+    </div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Cold Soba</div>
+        <div class="item-desc">Buckwheat noodles, dashi dipping sauce, wasabi, nori.</div>
+      </div>
+      <div class="item-price">14</div>
+    </div>
+  </div>
+
+  <div class="category" data-cat="drinks">
+    <div class="category-head"><span class="jp">酒</span><h2>Drinks</h2><span class="rule"></span></div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Sake Flight</div>
+        <div class="item-desc">Three pours, junmai to daiginjo, chosen nightly.</div>
+      </div>
+      <div class="item-price">19</div>
+    </div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Yuzu Highball</div>
+        <div class="item-desc">Japanese whisky, soda, fresh yuzu peel.</div>
+      </div>
+      <div class="item-price">13</div>
+    </div>
+
+    <div class="item">
+      <div>
+        <div class="item-name">Umeshu Sour</div>
+        <div class="item-desc">Plum wine, lemon, egg white.</div>
+      </div>
+      <div class="item-price">13</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Kuro Izakaya · 14 Ashwood Lane · Cash & Card</footer>
+
+<script>
+  const buttons = document.querySelectorAll('.filter-bar button');
+  const categories = document.querySelectorAll('.category');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+
+      categories.forEach(cat => {
+        if(filter === 'all' || cat.dataset.cat === filter){
+          cat.style.display = '';
+        } else {
+          cat.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
